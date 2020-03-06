@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProdHiFiApi.Data;
+using ProdHiFiApi.Models;
+using ProdHiFiApi.Models.Interface;
 
 namespace ProdHiFiApi
 {
@@ -33,6 +35,7 @@ namespace ProdHiFiApi
                 DbContextOptionsBuilder dbContextOptionsBuilder1 = options.UseInMemoryDatabase("Products").UseInternalServiceProvider(serviceProvider);
                 var dbContextOptionsBuilder = dbContextOptionsBuilder1;
             });
+            services.AddScoped<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
