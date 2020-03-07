@@ -1,14 +1,20 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProdHiFiApi.Models.Interface
 {
-    public interface IProductRepository
+    public interface IProductRepository : IGenericRepository<Product>
     {
-        IEnumerable<Product> GetAll();
-        Product GetProduct(int id);
-        Product Add(Product product);
-        void Remove(int id);
-        Product Update(Product product);
+        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<Product> GetProductByIdAsync(int id);
+
+        Task<IEnumerable<Product>> GetProductByDescriptionAsync(string description);
+        Task<IEnumerable<Product>> GetProductByModelAsync(string model);
+        Task<IEnumerable<Product>> GetProductByBrandAsync(string brand);
+
+        void CreateProduct(Product product);
+        void UpdateProduct(Product product);
+        void RemoveProduct(Product product);
 
     }
 }

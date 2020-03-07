@@ -1,49 +1,58 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProdHiFiApi.Data;
 using ProdHiFiApi.Models.Interface;
 
 namespace ProdHiFiApi.Models
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         private ProductDbContext _dbContext;
-        public ProductRepository(ProductDbContext prodDbContext)
+        public ProductRepository(ProductDbContext prodDbContext) : base(prodDbContext)
         {
             _dbContext = prodDbContext;
-            Add(new Product { Description = "Product 1 Description", Model = "Product 1 Model", Brand = "Product 1 Brand" });
-            Add(new Product { Description = "Product 2 Description", Model = "Product 2 Model", Brand = "Product 2 Brand" });
-            Add(new Product { Description = "Product 2 Description", Model = "Product 3 Model", Brand = "Product 3 Brand" });
-        }
-        public Product Add(Product product)
-        {
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
-            return product;
         }
 
-        public IEnumerable<Product> GetAll()
+        public void CreateProduct(Product product)
         {
-            var products = this._dbContext.Products.ToList();
-            return products;
+            Create(product);
         }
 
-        public Product GetProduct(int id)
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return this._dbContext.Products.FirstOrDefault(e => e.Id == id);
+            return await GetAll().OrderBy(mod => mod.Model).ToListAsync();
         }
 
-        public void Remove(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
-            var product = this._dbContext.Products.FirstOrDefault(e => e.Id == id);
-            this._dbContext.Products.Remove(product);
-            this._dbContext.SaveChanges();
+            return await GetByCustomCondition(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public Product Update(Product product)
+        public async Task<IEnumerable<Product>> GetProductByBrandAsync(string brand)
         {
-            _dbContext.Products.Add(product);
-            return product;
+            return await GetByCustomCondition(x => x.Brand.Contains(brand)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductByDescriptionAsync(string description)
+        {
+            return await GetByCustomCondition(x => x.Description.Contains(description)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductByModelAsync(string model)
+        {
+            return await GetByCustomCondition(x => x.Model.Contains(model)).ToListAsync();
+        }
+
+        public void RemoveProduct(Product product)
+        {
+            Remove(product);
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            Update(product);
         }
     }
 }

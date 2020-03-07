@@ -1,5 +1,13 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ProdHiFiApi.Models;
+using ProdHiFiApi.Models.CustomModels;
 using ProdHiFiApi.Models.Interface;
 
 namespace ProdHiFiApi.Controllers
@@ -11,15 +19,39 @@ namespace ProdHiFiApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private IProductRepository _repository;
+        private IRepositoryWrapper _repository;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="prodDbContext"></param>
-        public ProductsController(IProductRepository repository)
+        public ProductsController(IRepositoryWrapper repository)
         {
             _repository = repository;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("authenticate")]
+        public IActionResult Authenticate(LoginModel loginModel)
+        {
+            //LoginModel loginModel = new LoginModel();
+            //loginModel.EmailAddress = "vikramjb@gmail.com";
+            if (string.IsNullOrEmpty(loginModel.EmailAddress))
+            {
+                return BadRequest("Unable to create token");
+            }
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub,loginModel.EmailAddress),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789ABCDEF"));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken("http://programmingfundas.com", "http://programmingfundas.com", claims, expires: DateTime.Now.AddMinutes(30), signingCredentials: credentials);
+            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
 
         /// <summary>
@@ -27,9 +59,9 @@ namespace ProdHiFiApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var products = _repository.GetAll();
+            var products = await _repository.Product.GetAllProductsAsync();
             return Ok(products);
         }
 
@@ -39,9 +71,10 @@ namespace ProdHiFiApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok(_repository.GetProduct(id));
+            var product = await _repository.Product.GetProductByIdAsync(id);
+            return Ok(product);
         }
 
         /// <summary>
@@ -50,10 +83,11 @@ namespace ProdHiFiApi.Controllers
         /// <param name="product"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromBody]Product product)
+        public async Task<IActionResult> Post([FromBody]Product product)
         {
-            var newProduct = _repository.Add(product);
-            return Created("Get", newProduct);
+            _repository.Product.CreateProduct(product);
+            await _repository.SaveAsync();
+            return Ok();
         }
 
         /// <summary>
@@ -62,10 +96,11 @@ namespace ProdHiFiApi.Controllers
         /// <param name="product"></param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult Put([FromBody]Product product)
+        public async Task<IActionResult> Put([FromBody]Product product)
         {
-            var newProduct = _repository.Add(product);
-            return Created("Get", newProduct);
+            _repository.Product.UpdateProduct(product);
+            await _repository.SaveAsync();
+            return Ok();
         }
 
         /// <summary>
@@ -74,9 +109,11 @@ namespace ProdHiFiApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _repository.Remove(id);
+            var product = await _repository.Product.GetProductByIdAsync(id);
+            _repository.Product.RemoveProduct(product);
+            await _repository.SaveAsync();
             return Ok();
         }
 
