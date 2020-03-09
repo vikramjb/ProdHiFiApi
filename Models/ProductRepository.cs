@@ -18,6 +18,7 @@ namespace ProdHiFiApi.Models
         public void CreateProduct(Product product)
         {
             Create(product);
+            _dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
@@ -48,11 +49,13 @@ namespace ProdHiFiApi.Models
         public void RemoveProduct(Product product)
         {
             Remove(product);
+            _dbContext.SaveChangesAsync();
         }
 
         public void UpdateProduct(Product product)
         {
             Update(product);
+            _dbContext.SaveChangesAsync();
         }
     }
 }

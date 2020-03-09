@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link rel="stylesheet" href="css/main.css" asp-append-version="true">
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<body>
+    <h1>Product Management</h1>
+    <div class="card" id="unauthenticatedDiv">
+        <div class="container">
+            <div class="form-group">
+                <label for="loginEmail">Login Email</label>
+                <input type="text" class="form-control" id="loginEmail" value="someemail@email.com" required
+                    aria-describedby="emailHelp">
+            </div>
+        </div>
+        <button type="button" id="authenticate" onclick="authenticate();" class="btn btn-primary">Authenticate</button>
+    </div>
+
+    <div id="authenticatedDiv">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Product List</h5>
+                <div id="productListDiv">
+                    <table class="table">
+                        <tr>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Model</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        <tbody id="productsTableBody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Add Product</h5>
+                <div id="productFormDiv" class="form">
+                    <input type="hidden" id="productId" />
+                    <div class="form-group">
+                        <label for="productDescription">Product Description</label>
+                        <input type="text" class="form-control" id="productDescription"
+                            aria-describedby="descriptionHelp">
+                        <small id="descriptionHelp" class="form-text text-muted">Provide Description</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="productModel">Model</label>
+                        <input type="text" class="form-control" id="productModel">
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Brand</label>
+                        <input type="text" class="form-control" id="productBrand">
+                    </div>
+                    <button type="button" id="addProduct" class="btn btn-primary" onclick="addProduct()">Add
+                        Product</button>
+                    <button type="button" id="updateProduct" class="btn btn-primary" onclick="updateProduct()"
+                        style="display: none;">Update
+                        Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hiddenToken" value="" />
+</body>
+
+<script src="js/main.js" asp-append-version="true"></script>
+<script type="text/javascript">
+    showHideSections();
+</script>
+
+</html>

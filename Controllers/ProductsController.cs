@@ -31,11 +31,9 @@ namespace ProdHiFiApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("authenticate")]
+        [HttpPost("authenticate")]
         public IActionResult Authenticate(LoginModel loginModel)
         {
-            //LoginModel loginModel = new LoginModel();
-            //loginModel.EmailAddress = "vikramjb@gmail.com";
             if (string.IsNullOrEmpty(loginModel.EmailAddress))
             {
                 return BadRequest("Unable to create token");
@@ -74,6 +72,10 @@ namespace ProdHiFiApi.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var product = await _repository.Product.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
             return Ok(product);
         }
 
@@ -83,9 +85,15 @@ namespace ProdHiFiApi.Controllers
         /// <param name="product"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Product product)
+        public async Task<IActionResult> Post([FromBody]ProductViewModel productViewModel)
         {
-            _repository.Product.CreateProduct(product);
+            var newProduct = new Product
+            {
+                Description = productViewModel.Description,
+                Model = productViewModel.Model,
+                Brand = productViewModel.Brand
+            };
+            _repository.Product.CreateProduct(newProduct);
             await _repository.SaveAsync();
             return Ok();
         }
@@ -96,9 +104,28 @@ namespace ProdHiFiApi.Controllers
         /// <param name="product"></param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody]Product product)
+        public async Task<IActionResult> Put([FromBody]ProductViewModel productViewModel)
         {
-            _repository.Product.UpdateProduct(product);
+            if (!productViewModel.Id.HasValue)
+            {
+                return BadRequest();
+            }
+
+            var existingProduct = await _repository.Product.GetProductByIdAsync(productViewModel.Id.Value);
+
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            existingProduct = new Product
+            {
+                Id = productViewModel.Id.Value,
+                Description = productViewModel.Description,
+                Model = productViewModel.Model,
+                Brand = productViewModel.Brand
+            };
+            _repository.Product.UpdateProduct(existingProduct);
             await _repository.SaveAsync();
             return Ok();
         }
@@ -112,6 +139,10 @@ namespace ProdHiFiApi.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _repository.Product.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
             _repository.Product.RemoveProduct(product);
             await _repository.SaveAsync();
             return Ok();
