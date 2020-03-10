@@ -21,6 +21,10 @@ namespace ProdHiFiApi.Models
             _dbContext.SaveChangesAsync();
         }
 
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return GetAll().OrderBy(mod => mod.Model).ToList();
+        }
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             return await GetAll().OrderBy(mod => mod.Model).ToListAsync();

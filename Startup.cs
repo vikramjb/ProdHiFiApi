@@ -31,7 +31,7 @@ namespace ProdHiFiApi
             services.AddEntityFrameworkInMemoryDatabase().AddDbContext<ProductDbContext>((serviceProvider, options) =>
             {
                 DbContextOptionsBuilder dbContextOptionsBuilder1 = options.UseInMemoryDatabase("Products").UseInternalServiceProvider(serviceProvider);
-                var dbContextOptionsBuilder = dbContextOptionsBuilder1;
+                //var dbContextOptionsBuilder = dbContextOptionsBuilder1;
             });
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddTransient<BaseDataSeeder>();
