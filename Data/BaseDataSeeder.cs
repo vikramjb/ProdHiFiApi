@@ -23,6 +23,7 @@ namespace ProdHiFiApi.Data
                 _repositoryWrapper.Product.CreateProduct(new Product { Description = "Guitar", Model = "Acoustic", Brand = "Fender" });
                 _repositoryWrapper.Product.CreateProduct(new Product { Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
                 _repositoryWrapper.Product.CreateProduct(new Product { Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
+                await _repositoryWrapper.SaveAsync();
             }
         }
 

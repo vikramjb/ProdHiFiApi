@@ -5,7 +5,6 @@ namespace ProdHiFiApi.Models.Interface
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        IEnumerable<Product> GetAllProducts();
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,12 +19,6 @@ namespace ProdHiFiApi.Models
         public void CreateProduct(Product product)
         {
             Create(product);
-            _dbContext.SaveChangesAsync();
-        }
-
-        public IEnumerable<Product> GetAllProducts()
-        {
-            return GetAll().OrderBy(mod => mod.Model).ToList();
         }
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
@@ -37,29 +32,27 @@ namespace ProdHiFiApi.Models
 
         public async Task<IEnumerable<Product>> GetProductByBrandAsync(string brand)
         {
-            return await GetByCustomCondition(x => x.Brand.Contains(brand)).ToListAsync();
+            return await GetByCustomCondition(x => x.Brand == brand).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductByDescriptionAsync(string description)
         {
-            return await GetByCustomCondition(x => x.Description.Contains(description)).ToListAsync();
+            return await GetByCustomCondition(x => x.Description.Contains(description, StringComparison.OrdinalIgnoreCase)).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductByModelAsync(string model)
         {
-            return await GetByCustomCondition(x => x.Model.Contains(model)).ToListAsync();
+            return await GetByCustomCondition(x => x.Model == model).ToListAsync();
         }
 
         public void RemoveProduct(Product product)
         {
             Remove(product);
-            _dbContext.SaveChangesAsync();
         }
 
         public void UpdateProduct(Product product)
         {
             Update(product);
-            _dbContext.SaveChangesAsync();
         }
     }
 }
