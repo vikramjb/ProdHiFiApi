@@ -20,6 +20,7 @@ namespace ProdHiFiApi.UnitTest
         public async void AddProduct()
         {
             var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "AddProductsDb").Options;
+            var listProducts = GetTestProducts();
             using (var _dbContext = new ProductDbContext(dbOptions))
             {
                 using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
@@ -27,24 +28,31 @@ namespace ProdHiFiApi.UnitTest
                     InsertProducts(repositoryWrapper);
                     var allProducts = await repositoryWrapper.Product.GetAllProductsAsync();
                     Assert.True(allProducts.Any());
+                    Assert.True(allProducts.Count() == listProducts.Count());
                 }
             }
         }
 
-        // [Fact]
-        // public async void UpdateProduct()
-        // {
-        //     var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "UpdateProductsDb").Options;
-        //     using (var _dbContext = new ProductDbContext(dbOptions))
-        //     {
-        //         using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
-        //         {
-        //             InsertProducts(repositoryWrapper);
-        //             var allProducts = await repositoryWrapper.Product.GetAllProductsAsync();
-        //             Assert.True(allProducts.Any());
-        //         }
-        //     }
-        // }
+        [Theory]
+        [InlineData(1, "New Fender Brand 1")]
+        [InlineData(2, "New Samsung Brand 1")]
+        [InlineData(3, "New JBL Brand 1")]
+        public async void UpdateProduct(int id, string newBrandInformation)
+        {
+            var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "UpdateProductsDb").Options;
+            using (var _dbContext = new ProductDbContext(dbOptions))
+            {
+                using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
+                {
+                    InsertProducts(repositoryWrapper);
+                    var productFromRepo = await repositoryWrapper.Product.GetProductByIdAsyncForEditing(id);
+                    productFromRepo.Brand = newBrandInformation;
+                    await repositoryWrapper.Product.UpdateProductAsync(productFromRepo);
+                    productFromRepo = await repositoryWrapper.Product.GetProductByIdAsync(id);
+                    Assert.True(productFromRepo.Brand == newBrandInformation);
+                }
+            }
+        }
 
         [Fact]
         public async void GetAllProducts()
@@ -85,7 +93,7 @@ namespace ProdHiFiApi.UnitTest
 
         [Theory]
         [InlineData("Fender")]
-        [InlineData("Galaxy")]
+        [InlineData("Samsung")]
         [InlineData("JBL")]
         public async void FindProductByBrand(string brandSearchText)
         {

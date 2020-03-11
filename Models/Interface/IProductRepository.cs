@@ -7,6 +7,7 @@ namespace ProdHiFiApi.Models.Interface
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
+        Task<Product> GetProductByIdAsyncForEditing(int id);
 
         Task<IEnumerable<Product>> GetProductByDescriptionAsync(string description);
         Task<IEnumerable<Product>> GetProductByModelAsync(string model);

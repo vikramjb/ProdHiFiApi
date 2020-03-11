@@ -41,5 +41,10 @@ namespace ProdHiFiApi.Models
         {
             _dbContext.Set<T>().Update(customObject);
         }
+
+        public IQueryable<T> GetByCustomConditionForEditing(Expression<Func<T, bool>> expression)
+        {
+            return this._dbContext.Set<T>().Where(expression);
+        }
     }
 }

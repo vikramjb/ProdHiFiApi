@@ -26,6 +26,10 @@ namespace ProdHiFiApi.Models
             return await GetAll().OrderBy(mod => mod.Model).ToListAsync();
         }
 
+        public async Task<Product> GetProductByIdAsyncForEditing(int id)
+        {
+            return await GetByCustomConditionForEditing(x => x.Id == id).FirstOrDefaultAsync();
+        }
         public async Task<Product> GetProductByIdAsync(int id)
         {
             return await GetByCustomCondition(x => x.Id == id).FirstOrDefaultAsync();

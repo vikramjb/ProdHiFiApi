@@ -8,6 +8,7 @@ namespace ProdHiFiApi.Models.Interface
     {
         IQueryable<T> GetAll();
         IQueryable<T> GetByCustomCondition(Expression<Func<T, bool>> expression);
+        IQueryable<T> GetByCustomConditionForEditing(Expression<Func<T, bool>> expression);
         void Create(T customObject);
         void Update(T customObject);
         void Remove(T customObject);
