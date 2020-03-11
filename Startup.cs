@@ -13,6 +13,7 @@ using ProdHiFiApi.Data;
 using ProdHiFiApi.Models;
 using ProdHiFiApi.Models.Interface;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace ProdHiFiApi
 {
@@ -32,10 +33,35 @@ namespace ProdHiFiApi
             {
                 DbContextOptionsBuilder dbContextOptionsBuilder1 = options.UseInMemoryDatabase("Products").UseInternalServiceProvider(serviceProvider);
             });
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(authConfig =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products HiFi API V1", Version = "v1" });
+                authConfig.SwaggerDoc("v1", new OpenApiInfo { Title = "Products HiFi API V1", Version = "v1" });
+                authConfig.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. For instance: \"Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                authConfig.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "Bearer",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },new string[] {}
+                    }
+                });
             });
+
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddTransient<BaseDataSeeder>();
             services.AddAuthentication(
@@ -53,26 +79,16 @@ namespace ProdHiFiApi
                {
                    ValidIssuer = Configuration["Tokens:Issuer"],
                    ValidAudience = Configuration["Tokens:Issuer"],
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0123456789ABCDEF"))
                };
            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            // services.AddSwaggerGen(config =>
-            // {
-            //     config.SwaggerDoc("Products API v1", new OpenApiInfo { Title = "Products API v1", Version = "v1" });
-            // });
-            // Register the Swagger generator, defining 1 or more Swagger documents
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, BaseDataSeeder dataSeeder)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Products HiFi API V1");
@@ -90,11 +106,7 @@ namespace ProdHiFiApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
-            // app.UseSwagger();
-            // app.UseSwaggerUI(config =>
-            // {
-            //     config.SwaggerEndpoint("/swagger/v1/swagger.json", "Products API v1");
-            // });
+            app.UseAuthentication();
             app.UseMvc();
 
             //using the dataseeder to load the initial data

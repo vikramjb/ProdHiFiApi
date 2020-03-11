@@ -17,6 +17,7 @@ namespace ProdHiFiApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private IRepositoryWrapper _repository;
@@ -53,7 +54,7 @@ namespace ProdHiFiApi.Controllers
         }
 
         /// <summary>
-        /// Get a product
+        /// Get all products
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -156,11 +157,39 @@ namespace ProdHiFiApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
-        [HttpPost("searchdescription")]
-        public async Task<IActionResult> SearchDescription(string searchText)
+        /// <summary>
+        /// Return a list products by searching a part of its description
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
+        [HttpPost("searchproductbydescription")]
+        public async Task<IActionResult> SearchProductByDescription(string searchText)
         {
             var products = await _repository.Product.GetProductByDescriptionAsync(searchText);
+            return Ok(products);
+        }
+
+        /// <summary>
+        /// Return a list products by searching a part of its brand
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
+        [HttpPost("searchproductbybrand")]
+        public async Task<IActionResult> SearchProductByBrand(string searchText)
+        {
+            var products = await _repository.Product.GetProductByBrandAsync(searchText);
+            return Ok(products);
+        }
+
+        /// <summary>
+        /// Return a list products by searching a part of its model
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
+        [HttpPost("searchproductbymodel")]
+        public async Task<IActionResult> SearchProductByModel(string searchText)
+        {
+            var products = await _repository.Product.GetProductByModelAsync(searchText);
             return Ok(products);
         }
 

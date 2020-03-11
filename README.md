@@ -12,5 +12,15 @@ The code is a sample implementation of a **web api** that is used for Product ma
 
 ## Authentication Methodology
 
-I am suing **JWTBearerToken** to authenticate requests.
+I am using **JWT Authorization** header using the Bearer scheme
+
+
+## Implementation Details
+
+
+### Swagger
+
+The project is configured to use swagger. The first method to execute should be the authenticate which accepts a random string and returns a token. Then the Authorization token in the swagger project can be configured with this generate token. Once done, rest of the methods are executed using the token which will authorize the requests.
+
+
 
