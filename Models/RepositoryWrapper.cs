@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 using ProdHiFiApi.Data;
 using ProdHiFiApi.Models.Interface;
 
 namespace ProdHiFiApi.Models
 {
-    public class RepositoryWrapper : IRepositoryWrapper
+    public class RepositoryWrapper : IRepositoryWrapper, IDisposable
     {
         private IProductRepository _productRepository;
         private ProductDbContext _dbContext;
@@ -23,6 +24,12 @@ namespace ProdHiFiApi.Models
                 }
                 return _productRepository;
             }
+        }
+
+        public void Dispose()
+        {
+            _dbContext = null;
+            _productRepository = null;
         }
 
         public async Task SaveAsync()

@@ -148,5 +148,13 @@ namespace ProdHiFiApi.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
+        [HttpPost("searchdescription")]
+        public async Task<IActionResult> SearchDescription(string searchText)
+        {
+            var products = await _repository.Product.GetProductByDescriptionAsync(searchText);
+            return Ok(products);
+        }
+
     }
 }

@@ -31,7 +31,10 @@ namespace ProdHiFiApi
             services.AddEntityFrameworkInMemoryDatabase().AddDbContext<ProductDbContext>((serviceProvider, options) =>
             {
                 DbContextOptionsBuilder dbContextOptionsBuilder1 = options.UseInMemoryDatabase("Products").UseInternalServiceProvider(serviceProvider);
-                //var dbContextOptionsBuilder = dbContextOptionsBuilder1;
+            });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products HiFi API V1", Version = "v1" });
             });
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddTransient<BaseDataSeeder>();
@@ -54,15 +57,26 @@ namespace ProdHiFiApi
                };
            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGen(config =>
-            {
-                config.SwaggerDoc("v1", new OpenApiInfo { Title = "Product API", Version = "v1" });
-            });
+            // services.AddSwaggerGen(config =>
+            // {
+            //     config.SwaggerDoc("Products API v1", new OpenApiInfo { Title = "Products API v1", Version = "v1" });
+            // });
+            // Register the Swagger generator, defining 1 or more Swagger documents
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, BaseDataSeeder dataSeeder)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Products HiFi API V1");
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -76,11 +90,11 @@ namespace ProdHiFiApi
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
-            app.UseSwagger();
-            app.UseSwaggerUI(config =>
-            {
-                config.SwaggerEndpoint("swagger/v1/swagger.json", "Products API v1");
-            });
+            // app.UseSwagger();
+            // app.UseSwaggerUI(config =>
+            // {
+            //     config.SwaggerEndpoint("/swagger/v1/swagger.json", "Products API v1");
+            // });
             app.UseMvc();
 
             //using the dataseeder to load the initial data
