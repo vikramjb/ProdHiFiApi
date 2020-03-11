@@ -16,9 +16,10 @@ namespace ProdHiFiApi.Models
             _dbContext = prodDbContext;
         }
 
-        public void CreateProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
             Create(product);
+            await _dbContext.SaveChangesAsync();
         }
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
@@ -32,7 +33,7 @@ namespace ProdHiFiApi.Models
 
         public async Task<IEnumerable<Product>> GetProductByBrandAsync(string brand)
         {
-            return await GetByCustomCondition(x => x.Brand == brand).ToListAsync();
+            return await GetByCustomCondition(x => x.Brand.Contains(brand)).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductByDescriptionAsync(string description)
@@ -42,17 +43,19 @@ namespace ProdHiFiApi.Models
 
         public async Task<IEnumerable<Product>> GetProductByModelAsync(string model)
         {
-            return await GetByCustomCondition(x => x.Model == model).ToListAsync();
+            return await GetByCustomCondition(x => x.Model.Contains(model)).ToListAsync();
         }
 
-        public void RemoveProduct(Product product)
+        public async Task RemoveProductAsync(Product product)
         {
             Remove(product);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateProduct(Product product)
+        public async Task UpdateProductAsync(Product product)
         {
             Update(product);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

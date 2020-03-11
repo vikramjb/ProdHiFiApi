@@ -31,10 +31,5 @@ namespace ProdHiFiApi.Models
             _dbContext = null;
             _productRepository = null;
         }
-
-        public async Task SaveAsync()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
     }
 }

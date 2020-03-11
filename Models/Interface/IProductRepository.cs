@@ -12,9 +12,9 @@ namespace ProdHiFiApi.Models.Interface
         Task<IEnumerable<Product>> GetProductByModelAsync(string model);
         Task<IEnumerable<Product>> GetProductByBrandAsync(string brand);
 
-        void CreateProduct(Product product);
-        void UpdateProduct(Product product);
-        void RemoveProduct(Product product);
+        Task CreateProductAsync(Product product);
+        Task UpdateProductAsync(Product product);
+        Task RemoveProductAsync(Product product);
 
     }
 }

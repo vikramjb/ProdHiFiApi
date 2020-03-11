@@ -93,8 +93,7 @@ namespace ProdHiFiApi.Controllers
                 Model = productViewModel.Model,
                 Brand = productViewModel.Brand
             };
-            _repository.Product.CreateProduct(newProduct);
-            await _repository.SaveAsync();
+            await _repository.Product.CreateProductAsync(newProduct);
             return Ok();
         }
 
@@ -106,9 +105,14 @@ namespace ProdHiFiApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]ProductViewModel productViewModel)
         {
+            if (productViewModel == null)
+            {
+                return BadRequest("Product object is null.");
+            }
+
             if (!productViewModel.Id.HasValue)
             {
-                return BadRequest();
+                return BadRequest("Product object does not have a unique identifier");
             }
 
             var existingProduct = await _repository.Product.GetProductByIdAsync(productViewModel.Id.Value);
@@ -125,8 +129,7 @@ namespace ProdHiFiApi.Controllers
                 Model = productViewModel.Model,
                 Brand = productViewModel.Brand
             };
-            _repository.Product.UpdateProduct(existingProduct);
-            await _repository.SaveAsync();
+            await _repository.Product.UpdateProductAsync(existingProduct);
             return Ok();
         }
 
@@ -138,13 +141,18 @@ namespace ProdHiFiApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (id < 0)
+            {
+                return BadRequest("Product reference for deletion not found.");
+            }
+
             var product = await _repository.Product.GetProductByIdAsync(id);
+
             if (product == null)
             {
-                return NotFound();
+                return NotFound("Product for deletion not found.");
             }
-            _repository.Product.RemoveProduct(product);
-            await _repository.SaveAsync();
+            await _repository.Product.RemoveProductAsync(product);
             return Ok();
         }
 

@@ -20,10 +20,9 @@ namespace ProdHiFiApi.Data
             var productCount = await _repositoryWrapper.Product.GetAllProductsAsync();
             if (productCount.ToList().Count() <= 0)
             {
-                _repositoryWrapper.Product.CreateProduct(new Product { Description = "Guitar", Model = "Acoustic", Brand = "Fender" });
-                _repositoryWrapper.Product.CreateProduct(new Product { Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
-                _repositoryWrapper.Product.CreateProduct(new Product { Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
-                await _repositoryWrapper.SaveAsync();
+                await _repositoryWrapper.Product.CreateProductAsync(new Product { Description = "Guitar", Model = "Acoustic", Brand = "Fender" });
+                await _repositoryWrapper.Product.CreateProductAsync(new Product { Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
+                await _repositoryWrapper.Product.CreateProductAsync(new Product { Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
             }
         }
 

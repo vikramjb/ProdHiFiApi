@@ -45,65 +45,72 @@ namespace ProdHiFiApi.UnitTest
             }
         }
 
-        // [Fact]
-        // public async void FindProductById()
-        // {
-        //     var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "ProductsDb").Options;
-        //     using (var _dbContext = new ProductDbContext(dbOptions))
-        //     {
-        //         var repositoryWrapper = new RepositoryWrapper(_dbContext);
-        //         var product = await repositoryWrapper.Product.GetProductByIdAsync(1);
-        //         Assert.True(product != null);
-        //     }
-        // }
+        [Fact]
+        public async void FindProductById()
+        {
+            var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "FindProductsDb").Options;
+            using (var _dbContext = new ProductDbContext(dbOptions))
+            {
+                using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
+                {
+                    InsertProducts(repositoryWrapper);
+                    var product = await repositoryWrapper.Product.GetProductByIdAsync(1);
+                    Assert.True(product != null);
+                }
+            }
+        }
 
-        // [Fact]
-        // public async void FindProductByBrand()
-        // {
-        //     var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "ProductsDb").Options;
-        //     using (var _dbContext = new ProductDbContext(dbOptions))
-        //     {
-        //         var repositoryWrapper = new RepositoryWrapper(_dbContext);
-        //         var productList = await repositoryWrapper.Product.GetProductByBrandAsync("Fender");
-        //         Assert.True((productList.ToList().Count() > 0));
-        //     }
-        // }
+        [Fact]
+        public async void FindProductByBrand()
+        {
+            var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "BrandProductsDb").Options;
+            using (var _dbContext = new ProductDbContext(dbOptions))
+            {
+                using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
+                {
+                    InsertProducts(repositoryWrapper);
+                    var productList = await repositoryWrapper.Product.GetProductByBrandAsync("Fender");
+                    Assert.True((productList.ToList().Count() > 0));
+                }
+            }
+        }
 
-        // [Fact]
-        // public async void FindProductByModel()
-        // {
-        //     var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "ProductsDb").Options;
-        //     using (var _dbContext = new ProductDbContext(dbOptions))
-        //     {
-        //         var repositoryWrapper = new RepositoryWrapper(_dbContext);
-        //         var productList = await repositoryWrapper.Product.GetProductByModelAsync("Acoustic");
-        //         Assert.True((productList.ToList().Count() > 0));
-        //     }
-        // }
+        [Fact]
+        public async void FindProductByModel()
+        {
+            var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "ModelProductsDb").Options;
+            using (var _dbContext = new ProductDbContext(dbOptions))
+            {
+                using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
+                {
+                    InsertProducts(repositoryWrapper);
+                    var productList = await repositoryWrapper.Product.GetProductByModelAsync("Acoustic");
+                    Assert.True((productList.ToList().Count() > 0));
+                }
+            }
+        }
 
-        // [Fact]
-        // public async void FindProductByDescription()
-        // {
-        //     var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "ProductsDb").Options;
-        //     using (var _dbContext = new ProductDbContext(dbOptions))
-        //     {
-        //         var repositoryWrapper = new RepositoryWrapper(_dbContext);
-        //         repositoryWrapper.Product.CreateProduct(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
-        //         //repositoryWrapper.Product.CreateProduct(new Product { Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
-        //         //repositoryWrapper.Product.CreateProduct(new Product { Id = 3, Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
-        //         await repositoryWrapper.SaveAsync();
-        //         var productList = await repositoryWrapper.Product.GetAllProductsAsync();
-        //         Assert.True(productList.Any());
-        //         //var products = await repositoryWrapper.Product.GetProductByDescriptionAsync("Ultra");
-        //         //Assert.True(products.Any());
-        //     }
-        // }
+        [Fact]
+        public async void FindProductByDescription()
+        {
+            var dbOptions = new DbContextOptionsBuilder<ProductDbContext>().UseInMemoryDatabase(databaseName: "DescriptionProductsDb").Options;
+            using (var _dbContext = new ProductDbContext(dbOptions))
+            {
+                using (var repositoryWrapper = new RepositoryWrapper(_dbContext))
+                {
+                    InsertProducts(repositoryWrapper);
+                    var productList = await repositoryWrapper.Product.GetProductByDescriptionAsync("Ultra");
+                    Assert.True((productList.Any()));
+                }
+            }
+        }
 
 
         private async void InsertProducts(IRepositoryWrapper repositoryWrapper)
         {
-            repositoryWrapper.Product.CreateProduct(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
-            await repositoryWrapper.SaveAsync();
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 3, Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
         }
 
     }
