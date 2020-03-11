@@ -78,7 +78,7 @@ namespace ProdHiFiApi.UnitTest
             {
                 var repositoryWrapper = new RepositoryWrapper(_dbContext);
                 var productList = await repositoryWrapper.Product.GetProductByDescriptionAsync("Guitar");
-                Assert.True((productList.ToList().Count() > 0));
+                Assert.True(productList.ToList().Count() > 0);
             }
         }
     }
