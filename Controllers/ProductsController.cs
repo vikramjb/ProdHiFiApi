@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -25,7 +26,7 @@ namespace ProdHiFiApi.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="prodDbContext"></param>
+        /// <param name="repository"></param>
         public ProductsController(IRepositoryWrapper repository)
         {
             _repository = repository;
@@ -60,7 +61,7 @@ namespace ProdHiFiApi.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _repository.Product.GetAllProductsAsync();
+            IEnumerable<Product> products = await _repository.Product.GetAllProductsAsync();
             return Ok(products);
         }
 
@@ -72,7 +73,7 @@ namespace ProdHiFiApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var product = await _repository.Product.GetProductByIdAsync(id);
+            Product product = await _repository.Product.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();

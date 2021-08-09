@@ -10,10 +10,8 @@ namespace ProdHiFiApi.UnitTest
 {
     public class ProductUnitTest
     {
-
         public ProductUnitTest()
         {
-
         }
 
         [Fact]
@@ -84,7 +82,7 @@ namespace ProdHiFiApi.UnitTest
                 {
                     InsertProducts(repositoryWrapper);
                     var product = await repositoryWrapper.Product.GetProductByIdAsync(id);
-                    var testProduct = testProducts.Where(x => x.Id == id).FirstOrDefault();
+                    var testProduct = testProducts.FirstOrDefault(x => x.Id == id);
                     Assert.NotNull(product);
                     Assert.True(product.Brand == testProduct.Brand);
                 }
@@ -106,7 +104,7 @@ namespace ProdHiFiApi.UnitTest
                     InsertProducts(repositoryWrapper);
                     var productList = await repositoryWrapper.Product.GetProductByBrandAsync(brandSearchText);
                     var testProductList = testProducts.Where(x => x.Brand.Contains(brandSearchText));
-                    Assert.True((productList.ToList().Count() > 0));
+                    Assert.True((productList.ToList().Any()));
                     Assert.True((productList.ToList().Count() == testProductList.Count()));
                 }
             }
@@ -122,7 +120,7 @@ namespace ProdHiFiApi.UnitTest
                 {
                     InsertProducts(repositoryWrapper);
                     var productList = await repositoryWrapper.Product.GetProductByModelAsync("Acoustic");
-                    Assert.True((productList.ToList().Count() > 0));
+                    Assert.True((productList.ToList().Any()));
                 }
             }
         }
@@ -142,25 +140,31 @@ namespace ProdHiFiApi.UnitTest
             }
         }
 
-
         private async void InsertProducts(IRepositoryWrapper repositoryWrapper)
         {
-            if (repositoryWrapper.Product.GetAll().Count() <= 0)
+            if (repositoryWrapper.Product.GetAll().Any())
             {
-                await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
-                await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
-                await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 3, Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
+                return;
             }
+
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
+            await repositoryWrapper.Product.CreateProductAsync(new Product { Id = 3, Description = "JBL Charge 4 Portable Blue-tooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
         }
 
-        private List<Product> GetTestProducts()
+        private IEnumerable<Product> GetTestProducts()
         {
-            var testProducts = new List<Product>();
-            testProducts.Add(new Product { Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender" });
-            testProducts.Add(new Product { Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20", Brand = "Samsung" });
-            testProducts.Add(new Product { Id = 3, Description = "JBL Charge 4 Portable Bluetooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" });
+            var testProducts = new List<Product>
+            {
+                new Product {Id = 1, Description = "Fender Bender Guitar", Model = "Acoustic", Brand = "Fender"},
+                new Product
+                {
+                    Id = 2, Description = "Samsung Galaxy S20 Ultra 5G 512GB (Cosmic Black)", Model = "Galaxy S20",
+                    Brand = "Samsung"
+                },
+                new Product { Id = 3, Description = "JBL Charge 4 Portable Blue-tooth Speaker (Black)", Model = "JBL Charge 4", Brand = "JBL" }
+            };
             return testProducts;
         }
-
     }
 }
