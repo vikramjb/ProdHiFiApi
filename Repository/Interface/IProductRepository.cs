@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProdHiFiApi.Models;
 
-namespace ProdHiFiApi.Models.Interface
+namespace ProdHiFiApi.Repository.Interface
 {
     public interface IProductRepository : IGenericRepository<Product>
     {

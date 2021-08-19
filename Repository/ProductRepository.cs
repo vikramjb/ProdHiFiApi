@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProdHiFiApi.Data;
-using ProdHiFiApi.Models.Interface;
+using ProdHiFiApi.Models;
+using ProdHiFiApi.Repository.Interface;
 
-namespace ProdHiFiApi.Models
+namespace ProdHiFiApi.Repository
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {

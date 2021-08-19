@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using ProdHiFiApi.Data;
-using ProdHiFiApi.Models.Interface;
+using ProdHiFiApi.Repository.Interface;
 
-namespace ProdHiFiApi.Models
+namespace ProdHiFiApi.Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper, IDisposable
     {

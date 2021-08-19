@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
-
-namespace ProdHiFiApi.Models.Interface
+namespace ProdHiFiApi.Repository.Interface
 {
     public interface IRepositoryWrapper
     {

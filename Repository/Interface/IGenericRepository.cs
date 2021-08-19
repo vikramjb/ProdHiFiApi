@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace ProdHiFiApi.Models.Interface
+namespace ProdHiFiApi.Repository.Interface
 {
     public interface IGenericRepository<T>
     {

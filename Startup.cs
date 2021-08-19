@@ -11,9 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using ProdHiFiApi.Data;
 using ProdHiFiApi.Models;
-using ProdHiFiApi.Models.Interface;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using ProdHiFiApi.Repository;
+using ProdHiFiApi.Repository.Interface;
 
 namespace ProdHiFiApi
 {

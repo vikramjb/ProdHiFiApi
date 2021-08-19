@@ -3,7 +3,8 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ProdHiFiApi.Data;
 using ProdHiFiApi.Models;
-using ProdHiFiApi.Models.Interface;
+using ProdHiFiApi.Repository;
+using ProdHiFiApi.Repository.Interface;
 using Xunit;
 
 namespace ProdHiFiApi.UnitTest

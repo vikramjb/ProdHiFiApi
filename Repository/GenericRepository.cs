@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProdHiFiApi.Data;
-using ProdHiFiApi.Models.Interface;
+using ProdHiFiApi.Repository.Interface;
 
-namespace ProdHiFiApi.Models
+namespace ProdHiFiApi.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

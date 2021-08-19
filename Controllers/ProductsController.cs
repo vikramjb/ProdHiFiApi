@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ProdHiFiApi.Models;
 using ProdHiFiApi.Models.CustomModels;
-using ProdHiFiApi.Models.Interface;
+using ProdHiFiApi.Repository.Interface;
 
 namespace ProdHiFiApi.Controllers
 {
@@ -84,7 +84,7 @@ namespace ProdHiFiApi.Controllers
         /// <summary>
         /// Create a product
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="productViewModel"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ProductViewModel productViewModel)
@@ -102,7 +102,7 @@ namespace ProdHiFiApi.Controllers
         /// <summary>
         /// Create or update a product
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="productViewModel"></param>
         /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]ProductViewModel productViewModel)
